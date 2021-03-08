@@ -6,12 +6,16 @@ class Main
 {
     public static function OnProlog(){
         global $APPLICATION, $USER;
-        $APPLICATION->SetAdditionalCSS("/local/js/gilyazov.core/template/style.css", true);
         $engine = new \CComponentEngine();
+        $assetManager = \Bitrix\Main\Page\Asset::getInstance();
+        $assetManager->addCss("/local/js/gilyazov.core/template/style.css");
+
         $page = $engine->guessComponentPath(
-            '/bizproc/processes/',
+            '/',
             [
-                'proc-detail' => '#iblock_id#/element/0/#element_id#/'
+                'proc-detail' => 'bizproc/processes/#iblock_id#/element/0/#element_id#/',
+                'task-detail' => 'company/personal/user/#user_id#/tasks/task/view/#task_id#/',
+                'task-edit' => 'company/personal/user/#user_id#/tasks/task/edit/0/'
             ],
             $variables
         );
@@ -34,28 +38,36 @@ class Main
             $documentType = array('lists', 'BizprocDocument', 'iblock_'.$variables['iblock_id']);
             $documentId = array('lists', 'BizprocDocument', $variables['element_id']);
             $arDocumentStates = current(\CBPDocument::GetDocumentStates($documentType, $documentId));
-
-            $APPLICATION->IncludeComponent("bitrix:forum.comments",
-                "",
-                array(
-                    "FORUM_ID" => \CBPHelper::getForumId(),
-                    "ENTITY_TYPE" => "WF",
-                    "ENTITY_ID" => \CBPStateService::getWorkflowIntegerId($arDocumentStates["ID"]),
-                    "ENTITY_XML_ID" => "WF_" . $arDocumentStates["ID"],
-                    "PERMISSION" => $USER->IsAdmin() ? "X" : "M",
-                    "ALLOW_EDIT_OWN_MESSAGE" => "N",
-                    "URL_TEMPLATES_PROFILE_VIEW" => "/company/personal/user/#user_id#/",
-                    "SHOW_RATING" => "N",
-                    "SHOW_LINK_TO_MESSAGE" => "N",
-                    "MESSAGES_PER_PAGE" => 200,
-                    "BIND_VIEWER" => "Y",
-                    "VISIBLE_RECORDS_COUNT" => 200
-                ),
-                false,
-                array('HIDE_ICONS' => 'Y')
-            );
+            if ($arDocumentStates){
+                $APPLICATION->IncludeComponent("bitrix:forum.comments",
+                    "",
+                    array(
+                        "FORUM_ID" => \CBPHelper::getForumId(),
+                        "ENTITY_TYPE" => "WF",
+                        "ENTITY_ID" => \CBPStateService::getWorkflowIntegerId($arDocumentStates["ID"]),
+                        "ENTITY_XML_ID" => "WF_" . $arDocumentStates["ID"],
+                        "PERMISSION" => $USER->IsAdmin() ? "X" : "M",
+                        "ALLOW_EDIT_OWN_MESSAGE" => "N",
+                        "URL_TEMPLATES_PROFILE_VIEW" => "/company/personal/user/#user_id#/",
+                        "SHOW_RATING" => "N",
+                        "SHOW_LINK_TO_MESSAGE" => "N",
+                        "MESSAGES_PER_PAGE" => 200,
+                        "BIND_VIEWER" => "Y",
+                        "VISIBLE_RECORDS_COUNT" => 200
+                    ),
+                    false,
+                    array('HIDE_ICONS' => 'Y')
+                );
+            }
             $customHtml = ob_get_clean();
             $GLOBALS['APPLICATION']->AddViewContent('sidebar', $customHtml, 100);
+        }
+
+        if ($page === 'task-detail'){
+            \Bitrix\Main\UI\Extension::load('gilyazov.lib');
+        }
+        if ($page === 'task-edit'){
+            $assetManager->addJs('/local/js/gilyazov/lib/task/task_edit.js');
         }
     }
 }
