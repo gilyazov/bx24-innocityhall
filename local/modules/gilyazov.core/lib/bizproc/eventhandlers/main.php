@@ -8,7 +8,7 @@ class Main
         global $APPLICATION, $USER;
         $engine = new \CComponentEngine();
         $assetManager = \Bitrix\Main\Page\Asset::getInstance();
-        $assetManager->addCss("/local/js/gilyazov.core/template/style.css");
+        $assetManager->addCss("/local/js/gilyazov/template/style.css");
 
         $page = $engine->guessComponentPath(
             '/',
@@ -39,6 +39,15 @@ class Main
             $documentId = array('lists', 'BizprocDocument', $variables['element_id']);
             $arDocumentStates = current(\CBPDocument::GetDocumentStates($documentType, $documentId));
             if ($arDocumentStates){
+                $APPLICATION->IncludeComponent("gilyazov:workflow.reviewers",
+                    "",
+                    array(
+                        "ELEMENT_ID" => $variables['element_id'],
+                        "IBLOCK_ID" => $variables['iblock_id']
+                    ),
+                    false
+                );
+
                 $APPLICATION->IncludeComponent("bitrix:forum.comments",
                     "",
                     array(
@@ -63,11 +72,11 @@ class Main
             $GLOBALS['APPLICATION']->AddViewContent('sidebar', $customHtml, 100);
         }
 
-        if ($page === 'task-detail'){
+        /*if ($page === 'task-detail'){
             \Bitrix\Main\UI\Extension::load('gilyazov.lib');
         }
         if ($page === 'task-edit'){
             $assetManager->addJs('/local/js/gilyazov/lib/task/task_edit.js');
-        }
+        }*/
     }
 }
