@@ -1,6 +1,6 @@
 <?php
 
-namespace Gilyazov\Core\Bizproc\EventHandlers;
+namespace Gilyazov\Core\Bizproc\Sheet\EventHandlers;
 
 class Workflow
 {
@@ -39,7 +39,7 @@ class Workflow
             $result = [];
         }
         if ($arTasks['Type'] === 'ApproveActivity') {
-            $result[] = $arTasks['Properties'];
+            $result[$arTasks['Name']] = $arTasks['Properties'];
         }
 
         foreach ($arTasks['Children'] as $arTask) {
@@ -49,13 +49,5 @@ class Workflow
         }
 
         return $result;
-    }
-
-    protected static function getIblockByElementID(int $id): int
-    {
-        $res = \CIBlockElement::GetByID($id);
-        if ($arElement = $res->GetNext()) {
-            return $arElement["IBLOCK_ID"];
-        }
     }
 }

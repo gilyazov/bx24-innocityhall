@@ -6,7 +6,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 $this->addExternalCss(SITE_TEMPLATE_PATH."/css/sidebar.css");
 /**/
 ?>
-<div class="sidebar-widget sidebar-widget-bp">
+<div class="sidebar-widget sidebar-widget-bp sidebar-sheet">
     <div class="sidebar-widget-top">
         <div class="sidebar-widget-top-title">Лист согласования</div>
     </div>
@@ -25,7 +25,15 @@ $this->addExternalCss(SITE_TEMPLATE_PATH."/css/sidebar.css");
                     </span>
                     <span class="sidebar-user-info">
                         <span class="user-birth-name"><?=$arUser['LAST_NAME']?> <?=$arUser['NAME']?></span>
-                        <span class="user-birth-date"><?=$arUser["WORK_POSITION"]?></span>
+                        <span class="user-birth-date">
+                            <?if($arActivity['REVIEWED'][$arUser["ID"]]):?>
+                                Согласовано: <?=$arActivity['REVIEWED'][$arUser["ID"]]['MODIFIED']?>
+                            <?elseif($arActivity['REPLACED'][$arUser["ID"]]):?>
+                                Отклонено: <?=$arActivity['REPLACED'][$arUser["ID"]]['MODIFIED']?>
+                            <?else:?>
+                                <?=$arUser["WORK_POSITION"]?>
+                            <?endif;?>
+                        </span>
                     </span>
                 </a>
             <?endforeach;?>
