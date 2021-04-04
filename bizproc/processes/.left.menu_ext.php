@@ -31,6 +31,13 @@ $aMenuB24[] = Array(
     Array(),
     "CSite::InGroup(array(1, 3))"
 );
+$aMenuB24[] = Array(
+    "Приказы",
+    "/bizproc/processes/38/view/0/",
+    Array(),
+    Array(),
+    "CSite::InGroup(array(1, 3))"
+);
 
 $aMenuLinks = array_merge($aMenuB24, $aMenuLinks);
 ?>

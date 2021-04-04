@@ -2,3 +2,26 @@
     line-height: normal;
     padding: 10px 19px;
 }
+.sidebar-sheet[data-readmore] {
+    transition: height 200ms;
+    overflow: hidden;
+    margin-bottom: 1px;
+    position: relative;
+}
+.sidebar-sheet[aria-expanded="false"]:after {
+    content: '';
+    position: absolute;
+    background-image: linear-gradient(to bottom, transparent, white);
+    opacity: 2.5;
+    height: 30%;
+    width: 100%;
+    bottom: 0;
+}
+.sheet-link{
+    background: white;
+    padding: 10px 19px;
+    margin-bottom: 17px;
+}
+.sidebar-sheet + [data-readmore-toggle], .sidebar-sheet[data-readmore] {
+    display: block;
+}

@@ -58,6 +58,7 @@ class CrmReportPlanComponent extends CBitrixComponent
                 {
                     $user = str_replace(['{=', '}'], '', $userConst);
                     $arUser = explode(':', $user);
+                    $bitrixUser = [];
 
                     switch ($arUser[0]) {
                         case 'GlobalConst':
@@ -68,16 +69,23 @@ class CrmReportPlanComponent extends CBitrixComponent
                             $res = \CIBlockElement::GetProperty($this->arParams['IBLOCK_ID'], $this->arParams['ELEMENT_ID'], "sort", "asc", array("CODE" => str_replace('PROPERTY_', '', $arUser[1])));
                             while ($arProp = $res->GetNext())
                             {
-                                $bitrixUser[] = $arProp['VALUE'];
+                                if ($arProp['VALUE'])
+                                {
+                                    $bitrixUser[] = $arProp['VALUE'];
+                                }
                             }
                             break;
                     }
 
-                    $rsUser = CUser::GetList(($by="ID"), ($order="ASC"), ['ID' => implode('|', $bitrixUser)]);
-                    while ($arUser = $rsUser->Fetch())
+                    if ($bitrixUser)
                     {
-                        $arActivity['REAL_USER'][$arUser['ID']] = $arUser;
+                        $rsUser = CUser::GetList(($by="ID"), ($order="ASC"), ['ID' => implode('|', $bitrixUser)]);
+                        while ($arUser = $rsUser->Fetch())
+                        {
+                            $arActivity['REAL_USER'][$arUser['ID']] = $arUser;
+                        }
                     }
+                    unset($bitrixUser);
                 }
             }
         }

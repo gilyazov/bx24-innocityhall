@@ -3,14 +3,20 @@
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
 }
+CJSCore::Init(array("jquery3"));
 $this->addExternalCss(SITE_TEMPLATE_PATH."/css/sidebar.css");
-/**/
+$this->addExternalJS($templateFolder . "/js/readmore.min.js");
 ?>
 <div class="sidebar-widget sidebar-widget-bp sidebar-sheet">
     <div class="sidebar-widget-top">
         <div class="sidebar-widget-top-title">Лист согласования</div>
     </div>
     <?foreach ($arResult['SHEET'] as $arStatus):?>
+        <?
+            if (!current($arStatus['approveActivity'])['REAL_USER']){
+                continue;
+            }
+        ?>
         <span class="task-item">
             <?=$arStatus['name']?>
         </span>
@@ -31,7 +37,7 @@ $this->addExternalCss(SITE_TEMPLATE_PATH."/css/sidebar.css");
                             <?elseif($arActivity['REPLACED'][$arUser["ID"]]):?>
                                 Отклонено: <?=$arActivity['REPLACED'][$arUser["ID"]]['MODIFIED']?>
                             <?else:?>
-                                <?=$arUser["WORK_POSITION"]?>
+                                Не начато
                             <?endif;?>
                         </span>
                     </span>
