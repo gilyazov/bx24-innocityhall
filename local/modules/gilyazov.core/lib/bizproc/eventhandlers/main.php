@@ -9,6 +9,7 @@ class Main
         $engine = new \CComponentEngine();
         $assetManager = \Bitrix\Main\Page\Asset::getInstance();
         $assetManager->addCss("/local/js/gilyazov/template/style.css");
+        \CJSCore::Init(array("jquery3"));
 
         $page = $engine->guessComponentPath(
             '/',

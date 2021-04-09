@@ -15,7 +15,67 @@ class Task
         $arNewSheet = self::modifySheet($arSheet, $arTask, $status, $userId);
         self::updateSheet($elementId, $arNewSheet);
 
-        // \AddMessage2Log();
+        self::addComment($elementId, $userId, $status);
+    }
+
+    protected static function addComment($elementId, $userId, $status)
+    {
+        \Bitrix\Main\Loader::includeModule('forum');
+        \Bitrix\Main\Loader::includeModule('iblock');
+
+        $res = \CIBlockElement::GetByID($elementId);
+        if($arElement = $res->GetNext()){
+            $newTopic = 'N';
+            $documentType = array('lists', 'BizprocDocument', 'iblock_'.$arElement['IBLOCK_ID']);
+            $documentId = array('lists', 'BizprocDocument', $arElement['ID']);
+            $arDocumentStates = current(\CBPDocument::GetDocumentStates($documentType, $documentId));
+
+            $db_res = \CForumTopic::GetList(array("SORT"=>"ASC"), array("FORUM_ID"=>\CBPHelper::getForumId(), "XML_ID" => "WF_" . $arDocumentStates["ID"]));
+            if ($arTopic = $db_res->Fetch())
+            {
+                $TID = $arTopic['ID'];
+            }
+            else{
+                $arFields = Array(
+                    "TITLE" => "TOPIC",
+                    "FORUM_ID" => \CBPHelper::getForumId(),
+                    "USER_START_ID" => $userId,
+                    "USER_START_NAME" => $GLOBALS['USER']->GetFullName(),
+                    "LAST_POSTER_NAME" => $GLOBALS['USER']->GetFullName(),
+                    "XML_ID" => "WF_" . $arDocumentStates["ID"],
+                    "APPROVED" => "Y",
+                    "PERMISSION_EXTERNAL" => "M",
+                    "PERMISSION" => "M",
+                );
+                $TID = \CForumTopic::Add($arFields);
+                $newTopic = 'Y';
+            }
+
+            if ($status == 1){
+                $message = '[B]Заявка согласована[/B]';
+            }
+            else{
+                $message = '[B]Заявка отклонена[/B]';
+            }
+            //$message .= '<br>' . $arTask['PARAMETERS']['CommentLabelMessage'];
+            $arFields = Array(
+                "POST_MESSAGE" => $message,
+                "AUTHOR_ID" => $userId,
+                "AUTHOR_NAME" => $GLOBALS['USER']->GetFullName(),
+                "FORUM_ID" => \CBPHelper::getForumId(),
+                "TOPIC_ID" => $TID,
+                "APPROVED" => "Y",
+                "NEW_TOPIC" => $newTopic,
+                "PARAM2" => intVal(\CBPStateService::getWorkflowIntegerId($arDocumentStates["ID"])),
+                "PERMISSION_EXTERNAL" => "M",
+                "PERMISSION" 	=> "M",
+                "IS_SERVICE_MESSAGE" => "Y"
+            );
+
+            $ID = \CForumMessage::Add($arFields);
+            if ($ID<=0 && $ex=$GLOBALS['APPLICATION']->GetException())
+                \AddMessage2Log($ex->GetString());
+        }
     }
 
     protected static function getTaskInfo(int $taskId)

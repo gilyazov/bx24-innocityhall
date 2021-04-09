@@ -25,3 +25,11 @@
 .sidebar-sheet + [data-readmore-toggle], .sidebar-sheet[data-readmore] {
     display: block;
 }
+.download-sheet{
+    position: absolute;
+    right: 3%;
+    top: 2px;
+}
+.download-sheet .ui-icon[class*=ui-icon-file-] > i{
+    background-size: 65% auto;
+}

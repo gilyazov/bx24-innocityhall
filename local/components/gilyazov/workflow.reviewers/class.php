@@ -95,10 +95,11 @@ class CrmReportPlanComponent extends CBitrixComponent
 
     public function executeComponent()
     {
+        $this->arParams['EXPORT'] = ($this->request->get('export') == 'Y');
         $this->includeModules();
         $this->setBaseParams();
         $this->arResult['SHEET'] = $this->getSheetWithUsers();
 
-        $this->includeComponentTemplate($this->arParams['EXPORT'] ? 'excel' : '');
+        $this->includeComponentTemplate($this->arParams['EXPORT'] ? 'pdf' : '');
     }
 }

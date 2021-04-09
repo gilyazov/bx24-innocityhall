@@ -3,13 +3,18 @@
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
 }
-CJSCore::Init(array("jquery3"));
+\Bitrix\Main\UI\Extension::load("ui.icons.disk");
+
 $this->addExternalCss(SITE_TEMPLATE_PATH."/css/sidebar.css");
 $this->addExternalJS($templateFolder . "/js/readmore.min.js");
 ?>
 <div class="sidebar-widget sidebar-widget-bp sidebar-sheet">
     <div class="sidebar-widget-top">
-        <div class="sidebar-widget-top-title">Лист согласования</div>
+        <div class="sidebar-widget-top-title">
+            Лист согласования
+
+            <a href="?export=Y" target="_blank" title="Скачать" class="download-sheet"><span class="ui-icon ui-icon-file-pdf"><i></i></span></a>
+        </div>
     </div>
     <?foreach ($arResult['SHEET'] as $arStatus):?>
         <?
@@ -37,7 +42,7 @@ $this->addExternalJS($templateFolder . "/js/readmore.min.js");
                             <?elseif($arActivity['REPLACED'][$arUser["ID"]]):?>
                                 Отклонено: <?=$arActivity['REPLACED'][$arUser["ID"]]['MODIFIED']?>
                             <?else:?>
-                                Не начато
+                                Ожидание решения
                             <?endif;?>
                         </span>
                     </span>
