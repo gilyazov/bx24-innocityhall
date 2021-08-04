@@ -6,9 +6,12 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 
 return [
     'css' => [
-
+        'src/css/template.css'
     ],
     'js' => [
-        "task/clone_task.js",
+        'src/js/template.js'
+    ],
+    'rel' => [
+        'jquery3'
     ]
 ];

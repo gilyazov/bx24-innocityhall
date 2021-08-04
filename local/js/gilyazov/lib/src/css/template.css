@@ -1,0 +1,22 @@
+#sidebar .feed-comments-block{
+    margin: 0;
+}
+body div.bx-interface-form div.bx-buttons input[name=save]{
+    display: none;
+}
+
+#workarea-content div.bx-interface-form div.bx-buttons input[name=apply]{
+    border-top: 1px solid #a3c926;
+    border-bottom: 1px solid #739913;
+    border-left: 1px solid #86ab1a;
+    border-right: 1px solid #86ab1a;
+    -webkit-box-shadow: 0 2px 2px #ccc;
+    -moz-box-shadow: 0 2px 2px #ccc;
+    box-shadow: 0 2px 2px #ccc;
+    color: #fff;
+    text-shadow: #799a16 0 1px 1px !important;
+    background: url(/bitrix/templates/bitrix24/images/interface/buttons-sprite.png) repeat-x left -356px;
+}
+#workarea-content div.bx-interface-form div.bx-buttons input[name=apply]:hover {
+    background-position: left -395px;
+}

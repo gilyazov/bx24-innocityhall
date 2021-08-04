@@ -5,12 +5,10 @@ namespace Gilyazov\Core\Bizproc\EventHandlers;
 class Main
 {
     public static function OnProlog(){
+        \Bitrix\Main\UI\Extension::load('gilyazov.lib');
+
         global $APPLICATION, $USER;
         $engine = new \CComponentEngine();
-        $assetManager = \Bitrix\Main\Page\Asset::getInstance();
-        $assetManager->addCss("/local/js/gilyazov/template/style.css");
-        \CJSCore::Init(array("jquery3"));
-
         $page = $engine->guessComponentPath(
             '/',
             [
@@ -72,12 +70,5 @@ class Main
             $customHtml = ob_get_clean();
             $GLOBALS['APPLICATION']->AddViewContent('sidebar', $customHtml, 100);
         }
-
-        /*if ($page === 'task-detail'){
-            \Bitrix\Main\UI\Extension::load('gilyazov.lib');
-        }
-        if ($page === 'task-edit'){
-            $assetManager->addJs('/local/js/gilyazov/lib/task/task_edit.js');
-        }*/
     }
 }

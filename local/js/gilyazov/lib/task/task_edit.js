@@ -1,3 +1,4 @@
+/*
 BX.ready(function(){
     BX.addCustomEvent("SidePanel.Slider:onLoad", BX.delegate(function(event) {
         const url = new URL(window.location.origin + event.getSlider().getUrl());
@@ -11,4 +12,4 @@ BX.ready(function(){
     BX.addCustomEvent(BXHtmlEditor, 'OnEditorCreated', BX.delegate(function (editor) {
         // событие для поля описание
     }));
-});
+});*/

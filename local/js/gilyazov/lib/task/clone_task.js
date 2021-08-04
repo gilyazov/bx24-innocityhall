@@ -59,7 +59,8 @@ BX.cloneTask = function () {
     }
 }
 
+/*
 BX.ready(function(){
     BX.CloneTask = new BX.cloneTask();
     BX.CloneTask.run();
-});
+});*/
