@@ -12,6 +12,7 @@ class Main
         $page = $engine->guessComponentPath(
             '/',
             [
+                'proc-list' => 'bizproc/processes/#iblock_id#/view/0/',
                 'proc-detail' => 'bizproc/processes/#iblock_id#/element/0/#element_id#/',
                 'task-detail' => 'company/personal/user/#user_id#/tasks/task/view/#task_id#/',
                 'task-edit' => 'company/personal/user/#user_id#/tasks/task/edit/0/'
@@ -20,7 +21,7 @@ class Main
         );
 
         // todo придумать красивый способ
-        if ($variables['proc_id'] == 33) {
+        if ($variables['iblock_id'] == 33) {
             ob_start();
             ?>
             <div class="pagetitle-container">
@@ -30,6 +31,17 @@ class Main
             $customHtml = ob_get_clean();
             $GLOBALS['APPLICATION']->AddViewContent('pagetitle', $customHtml, 100);
         }
+
+        /*инструкции*/
+        if ($page === 'proc-list'){
+            $res = \CIBlock::GetByID($variables['iblock_id']);
+            if($arIblock = $res->GetNext()) {
+                ob_start();
+                echo '<div class="pagetitle"><a href="https://bitrix.innocityhall.ru/knowledge/instructions/'.$arIblock["CODE"].'/" class="ui-btn-main">Инструкция</a></div>';
+                $GLOBALS['APPLICATION']->AddViewContent('inside_pagetitle', ob_get_clean(), 500);
+            }
+        }
+        /*end инструкции*/
 
         if (($page === 'proc-detail') && ($variables["element_id"] != 0)){
             ob_start();
@@ -67,8 +79,20 @@ class Main
                     array('HIDE_ICONS' => 'Y')
                 );
             }
-            $customHtml = ob_get_clean();
-            $GLOBALS['APPLICATION']->AddViewContent('sidebar', $customHtml, 100);
+
+            $GLOBALS['APPLICATION']->AddViewContent('sidebar', ob_get_clean(), 100);
+
+            /*команды БП*/
+            $APPLICATION->IncludeComponent("gilyazov:document.state",
+                "",
+                array(
+                    "ELEMENT_ID" => $variables['element_id'],
+                    "IBLOCK_ID" => $variables['iblock_id']
+                ),
+                false
+            );
+            $GLOBALS['APPLICATION']->AddViewContent('topblock', ob_get_clean(), 100);
+            /*end команды БП*/
         }
     }
 }
