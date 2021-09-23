@@ -1,0 +1,6 @@
+.menu-item-block[data-top-menu-id = "menu_proc"] .menu-item-link{
+    padding-left: 55px;
+}
+.menu-item-block[data-top-menu-id = "menu_proc"]  .menu-item-link-text{
+    font: 13px/25px "OpenSans-Regular","Helvetica Neue",Arial,Helvetica,sans-serif;
+}
